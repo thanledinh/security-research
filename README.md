@@ -1,182 +1,152 @@
-# 🔒 Security Research — Web Application Penetration Testing
+# 🔒 Security Research
 
 <div align="center">
 
-![Security Research](https://img.shields.io/badge/Security-Research-red?style=for-the-badge&logo=hackthebox&logoColor=white)
-![Pentest](https://img.shields.io/badge/Penetration-Testing-blue?style=for-the-badge&logo=kalilinux&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-Tools-green?style=for-the-badge&logo=node.js&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
+![Security Research](https://img.shields.io/badge/Security-Research-critical?style=for-the-badge&logo=hackthebox&logoColor=white)
+![Responsible Disclosure](https://img.shields.io/badge/Responsible-Disclosure-blue?style=for-the-badge&logo=shield&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
-**Công cụ và báo cáo bảo mật từ các dự án pentest thực tế**  
-**🤖 Tools được viết với sự hỗ trợ của AI (Gemini) — con người thực hiện recon, phân tích & exploit**
+**Independent security research focused on web application and infrastructure vulnerabilities**
 
-[Công Cụ](#-công-cụ) • [Phương Pháp](#-phương-pháp) • [Kết Quả](#-kết-quả-mẫu) • [Kỹ Năng](#-kỹ-năng)
+[Research](#-research) · [Methodology](#-methodology) · [Disclosure Policy](#-disclosure-policy) · [Repository Structure](#-repository-structure)
 
 </div>
 
 ---
 
-## 📋 Tổng Quan
+## About
 
-Repository này chứa các công cụ tự viết và báo cáo từ quá trình đánh giá bảo mật ứng dụng web. Tất cả nghiên cứu được thực hiện theo nguyên tắc **responsible disclosure** — các lỗ hổng đã được báo cáo cho nhà cung cấp trước khi công khai.
+This repository documents independent security research conducted on web applications, APIs, and cloud infrastructure. All research follows responsible disclosure principles — vendors are notified before any findings are published.
 
-> ⚠️ **Disclaimer:** Các công cụ và kỹ thuật trong repo này chỉ dùng cho mục đích nghiên cứu bảo mật hợp pháp. Không sử dụng trái phép.
+Research is conducted using a combination of manual analysis and AI-assisted tooling (Google Gemini). The researcher is responsible for target selection, execution, result interpretation, and disclosure decisions. AI assists with scripting, automation, and documentation.
 
----
-
-## 🛠️ Công Cụ
-
-### Crawler & Recon
-
-| Tool | Mô tả | Tech |
-|------|--------|------|
-| [`crawl_webapp.js`](tools/crawl_webapp.js) | Puppeteer crawler — bypass Cloudflare WAF, tải & phân tích JS bundles | Node.js, Puppeteer |
-| [`recon_infrastructure.js`](tools/recon_infrastructure.js) | Subdomain enum, S3 bucket check, DNS recon, email enum | Node.js |
-| [`bruteforce_paths.js`](tools/bruteforce_paths.js) | Hidden path discovery với concurrency control | Node.js |
-
-### Vulnerability Testing
-
-| Tool | Mô tả | Tech |
-|------|--------|------|
-| [`test_api_basic.js`](tools/test_api_basic.js) | API tester — IDOR, privilege escalation, info disclosure (60+ endpoints) | Node.js |
-| [`test_api_advanced.js`](tools/test_api_advanced.js) | JWT attacks, SQLi, Stored XSS, Race conditions | Node.js |
-| [`test_real_ip.js`](tools/test_real_ip.js) | Cloudflare bypass — test trực tiếp IP thật với Host header spoofing | Node.js |
-
-> 🤖 **Lưu ý:** Toàn bộ tools được viết bởi AI (Google Gemini) dựa trên yêu cầu và hướng dẫn của người thực hiện. Con người chịu trách nhiệm: xác định mục tiêu, chạy tools, phân tích kết quả, và đưa ra quyết định tấn công.
+> ⚠️ **Disclaimer:** All research documented here was performed in good faith for the purpose of improving software security. No data was exfiltrated, modified, or shared. No denial of service was caused.
 
 ---
 
-## 🔍 Phương Pháp
+## 🔬 Research Focus Areas
 
-```mermaid
-graph LR
-    A[🌐 Recon] --> B[📡 Crawling]
-    B --> C[📋 API Mapping]
-    C --> D[🔓 Vuln Testing]
-    D --> E[🏗️ Infrastructure]
-    E --> F[📝 Report]
-    
-    A --> |DNS, crt.sh, Shodan| A
-    B --> |Cloudflare Bypass| B
-    C --> |JS Static Analysis| C
-    D --> |JWT, SQLi, XSS| D
-    E --> |Nmap, Port Scan| E
-```
-
-### Phase 1: Reconnaissance
-- DNS records (A, MX, TXT, NS) via Google DoH
-- Certificate Transparency logs (crt.sh)
-- Subdomain enumeration (70+ subdomains)
-- Shodan/Censys IP intelligence
-
-### Phase 2: Crawling & Analysis
-- Puppeteer-based crawler with Cloudflare bypass
-- JavaScript bundle download & static analysis
-- API endpoint extraction from minified JS
-- Authentication flow analysis
-
-### Phase 3: Vulnerability Testing
-- JWT manipulation (none algorithm, weak secrets, expiration bypass)
-- SQL Injection (classic, time-based blind, union-based)
-- Stored XSS via profile fields
-- IDOR / Broken Access Control
-- Race conditions
-- Business logic flaws (payment, currency)
-- Mass assignment testing
-
-### Phase 4: Infrastructure Assessment
-- Real IP discovery (SPF records, crt.sh, historical DNS)
-- Port scanning (Nmap) on discovered IPs
-- Service fingerprinting (MariaDB, SSH, MDaemon)
-- Docker registry probing
-- S3 bucket misconfiguration checks
+| Area | Description |
+|------|-------------|
+| **Authentication & Session Management** | JWT implementation flaws, token lifecycle, session fixation |
+| **API Security** | Endpoint discovery, access control, mass assignment, IDOR |
+| **Infrastructure Reconnaissance** | Real IP discovery behind CDN/WAF, DNS analysis, certificate transparency |
+| **Frontend Security** | JavaScript static analysis, sensitive data exposure in client bundles |
+| **Cloud Misconfigurations** | Exposed databases, Docker registries, development environments |
 
 ---
 
-## 📊 Kết Quả Mẫu
+## 📂 Research
 
-### Dự án: Cloud Hosting Provider Assessment
+### [Hosting Control Panel — Security Analysis](research/hosting-control-panel-security-analysis/)
 
-| Severity | Số lượng | Ví dụ |
-|----------|----------|-------|
-| 🔴 High | 4 | JWT expiration bypass, Database exposed, SSH exposed, Stored XSS |
-| 🟡 Medium | 5 | User enumeration, API map disclosure, Docker registry leak, Dangling DNS |
-| 🔵 Info | 9 | Version disclosure, SPF leak, Subdomain leak via crt.sh |
-| ✅ Passed | 13 | JWT strong secret, SQLi blocked, Admin auth correct, Nuclei 0 CVE |
+A comprehensive security assessment of a cloud hosting platform, discovering vulnerabilities across the authentication layer, API surface, and underlying infrastructure.
 
-### Nổi bật:
-- **JWT Expiration Bypass** — Token hết hạn 2 ngày vẫn được API chấp nhận
-- **Database Exposed** — MariaDB 10.6.23 mở port 3306 ra internet trên staging server
-- **110+ Subdomains** phát hiện qua Certificate Transparency logs
-- **3 Real IPs** tìm được đằng sau Cloudflare
-- **100+ API Endpoints** extracted từ minified JavaScript
+| Metric | Value |
+|--------|-------|
+| **Findings** | 18 total (4 High, 5 Medium, 9 Informational) |
+| **Tests Conducted** | 13 categories passed without vulnerability |
+| **Real IPs Discovered** | 3 (behind Cloudflare) |
+| **API Endpoints Mapped** | 100+ |
+| **Subdomains Identified** | 110+ |
+| **Duration** | 4 days |
+| **Status** | Report submitted to vendor |
 
----
+**Key Findings:**
+- JWT tokens accepted after expiration — enabling persistent unauthorized access
+- Internal Docker registry URLs and startup commands exposed via public API
+- Database and SSH services exposed to the internet on staging server
+- Unsanitized HTML stored in user profile fields (Stored XSS)
 
-## 🧰 Kỹ Năng
-
-### Tools & Platforms
-```
-Kali Linux    │  Nmap         │  Hydra        │  Shodan
-Burp Suite    │  Nuclei       │  SQLMap       │  ffuf
-Puppeteer     │  Node.js      │  crt.sh       │  Google DoH
-```
-
-### Techniques
-```
-Cloudflare Bypass     │  JWT Attacks           │  API Fuzzing
-DNS Recon             │  Port Scanning         │  IDOR Testing
-Static JS Analysis    │  Certificate Recon     │  Docker Registry Probing
-Subdomain Takeover    │  SPF/MX IP Leaks       │  Brute Force (controlled)
-```
-
-### Frameworks & Standards
-```
-OWASP Top 10    │  PTES    │  Responsible Disclosure
-```
+📄 [Full Report →](research/hosting-control-panel-security-analysis/report.md)
 
 ---
 
-## 📁 Cấu Trúc Repo
+## 🧪 Methodology
+
+Research follows a structured approach based on the [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/) and [PTES](http://www.pentest-standard.org/):
+
+```
+Reconnaissance → Surface Mapping → Vulnerability Testing → Impact Analysis → Reporting
+```
+
+1. **Reconnaissance** — DNS enumeration, certificate transparency, Shodan/Censys, technology fingerprinting
+2. **Surface Mapping** — JavaScript analysis, API endpoint extraction, authentication flow analysis
+3. **Vulnerability Testing** — JWT attacks, injection testing, access control, business logic
+4. **Infrastructure Assessment** — Real IP discovery, port scanning, service fingerprinting
+5. **Impact Analysis** — Risk assessment, exploit chaining, severity classification
+6. **Reporting** — Structured documentation, responsible disclosure, remediation guidance
+
+📄 [Detailed Methodology →](methodology.md)
+
+---
+
+## 📜 Disclosure Policy
+
+This research follows **responsible disclosure** principles:
+
+- Vendors are contacted **before** any public disclosure
+- A minimum **90-day** remediation window is provided
+- Critical findings are communicated with urgency
+- Published reports are **sanitized** to remove exploitable details
+- No proof-of-concept code targeting specific vendors is published
+
+📄 [Full Disclosure Policy →](disclosure-policy.md)
+
+---
+
+## 📁 Repository Structure
 
 ```
 security-research/
-├── README.md
-├── tools/                          # Các công cụ tự viết
-│   ├── crawl_webapp.js             # Cloudflare bypass crawler
-│   ├── test_api_basic.js           # Basic API vulnerability tester
-│   ├── test_api_advanced.js        # Advanced vuln testing (JWT, SQLi, XSS)
-│   ├── recon_infrastructure.js     # Infrastructure recon
-│   ├── bruteforce_paths.js         # Hidden path discovery
-│   ├── test_real_ip.js             # Direct IP testing
-│   └── wordlist_paths.txt          # Custom wordlist
-├── reports/                        # Báo cáo mẫu (đã sanitize)
-│   └── sample_disclosure.md        # Responsible disclosure template
-└── methodology/                    # Tài liệu phương pháp
-    └── web_app_pentest_checklist.md
+│
+├── README.md                                        # This file
+├── methodology.md                                   # Research methodology
+├── disclosure-policy.md                             # Responsible disclosure policy
+│
+├── research/                                        # Published research
+│   └── hosting-control-panel-security-analysis/
+│       ├── report.md                                # Executive summary & findings
+│       ├── technical-analysis.md                    # Detailed technical analysis
+│       ├── impact.md                                # Impact assessment
+│       ├── remediation.md                           # Remediation recommendations
+│       └── timeline.md                              # Disclosure timeline
+│
+├── tools/                                           # Reusable security tools
+│   ├── crawl_webapp.js                              # Cloudflare bypass crawler
+│   ├── test_api_basic.js                            # API vulnerability tester
+│   ├── test_api_advanced.js                         # JWT, SQLi, XSS tester
+│   ├── recon_infrastructure.js                      # Infrastructure recon
+│   ├── bruteforce_paths.js                          # Path discovery
+│   ├── test_real_ip.js                              # Direct IP testing
+│   └── wordlist_paths.txt                           # Custom wordlist
+│
+└── assets/                                          # Media and resources
+    └── screenshots/
 ```
 
 ---
 
-## ⚖️ Đạo Đức & Pháp Lý
+## 🛡️ Ethics
 
-- ✅ Tất cả testing được thực hiện với **thiện chí**
-- ✅ Lỗ hổng được báo cáo theo **responsible disclosure**
-- ✅ Không dữ liệu nào bị trích xuất hoặc chia sẻ
-- ✅ Không gây gián đoạn dịch vụ
-- ✅ Thông tin nhạy cảm đã được **sanitize** trước khi công khai
+- All testing is performed with a **standard user account** — no privilege exploitation
+- Research targets are selected based on **public-facing services** only
+- Findings are reported to vendors with **actionable remediation guidance**
+- No automated scanning tools are used against production systems without consideration for impact
+- **AI-assisted tooling** is transparently credited throughout this repository
 
 ---
 
-## 📬 Liên Hệ
+## 📬 Contact
 
 - **GitHub:** [@thanledinh](https://github.com/thanledinh)
-- **Email:** [Email của bạn]
+- **Email:** [Your email]
+- **Disclosure reports:** Sent directly to vendor security contacts
 
 ---
 
 <div align="center">
 
-**Made with 🔥 by thanledinh — powered by AI 🤖**
+*Independent security research · Responsible disclosure · AI-assisted tooling*
 
 </div>
