@@ -7,7 +7,8 @@
 ![Node.js](https://img.shields.io/badge/Node.js-Tools-green?style=for-the-badge&logo=node.js&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-**Bộ công cụ và báo cáo bảo mật từ các dự án đánh giá bảo mật thực tế**
+**Công cụ và báo cáo bảo mật từ các dự án pentest thực tế**  
+**🤖 Tools được viết với sự hỗ trợ của AI (Gemini) — con người thực hiện recon, phân tích & exploit**
 
 [Công Cụ](#-công-cụ) • [Phương Pháp](#-phương-pháp) • [Kết Quả](#-kết-quả-mẫu) • [Kỹ Năng](#-kỹ-năng)
 
@@ -40,6 +41,8 @@ Repository này chứa các công cụ tự viết và báo cáo từ quá trìn
 | [`test_api_basic.js`](tools/test_api_basic.js) | API tester — IDOR, privilege escalation, info disclosure (60+ endpoints) | Node.js |
 | [`test_api_advanced.js`](tools/test_api_advanced.js) | JWT attacks, SQLi, Stored XSS, Race conditions | Node.js |
 | [`test_real_ip.js`](tools/test_real_ip.js) | Cloudflare bypass — test trực tiếp IP thật với Host header spoofing | Node.js |
+
+> 🤖 **Lưu ý:** Toàn bộ tools được viết bởi AI (Google Gemini) dựa trên yêu cầu và hướng dẫn của người thực hiện. Con người chịu trách nhiệm: xác định mục tiêu, chạy tools, phân tích kết quả, và đưa ra quyết định tấn công.
 
 ---
 
@@ -174,6 +177,6 @@ security-research/
 
 <div align="center">
 
-**Made with 🔥 by thanledinh**
+**Made with 🔥 by thanledinh — powered by AI 🤖**
 
 </div>
