@@ -140,7 +140,7 @@ security-research/
 ## 📬 Contact
 
 - **GitHub:** [@thanledinh](https://github.com/thanledinh)
-- **Email:** [Your email]
+- **Email:** thanle.webdev@gmail.com
 - **Disclosure reports:** Sent directly to vendor security contacts
 
 ---

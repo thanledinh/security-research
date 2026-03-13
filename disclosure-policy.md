@@ -77,4 +77,4 @@ This research is conducted in compliance with applicable laws. The researcher:
 For questions about this disclosure policy or to report a security concern:
 
 - **GitHub:** [@thanledinh](https://github.com/thanledinh)
-- **Email:** [Your security contact email]
+- **Email:** thanle.webdev@gmail.com
