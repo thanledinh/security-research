@@ -4,94 +4,101 @@
 
 ![Security Research](https://img.shields.io/badge/Security-Research-critical?style=for-the-badge&logo=hackthebox&logoColor=white)
 ![Responsible Disclosure](https://img.shields.io/badge/Responsible-Disclosure-blue?style=for-the-badge&logo=shield&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
-
-**Independent security research focused on web application and infrastructure vulnerabilities**
-
-[Research](#-research) · [Methodology](#-methodology) · [Disclosure Policy](#-disclosure-policy) · [Repository Structure](#-repository-structure)
+![Bug Bounty](https://img.shields.io/badge/Bug_Bounty-Writeups-orange?style=for-the-badge&logo=bugcrowd&logoColor=white)
 
 </div>
 
 ---
 
-## About
+## Independent Security Research
 
-This repository documents independent security research conducted on web applications, APIs, and cloud infrastructure. All research follows responsible disclosure principles — vendors are notified before any findings are published.
+This repository documents real-world vulnerability research conducted on public web infrastructures.
 
-Research is conducted using a combination of manual analysis and AI-assisted tooling (Google Gemini). The researcher is responsible for target selection, execution, result interpretation, and disclosure decisions. AI assists with scripting, automation, and documentation.
+Each case study includes:
+- Vulnerability discovery methodology
+- Proof of concept
+- Impact analysis
+- Remediation recommendations
 
-> ⚠️ **Disclaimer:** All research documented here was performed in good faith for the purpose of improving software security. No data was exfiltrated, modified, or shared. No denial of service was caused.
+The goal is to demonstrate practical application security skills including:
+- Web security testing
+- Infrastructure enumeration
+- Vulnerability chaining
+- Responsible disclosure
 
----
-
-## 🔬 Research Focus Areas
-
-| Area | Description |
-|------|-------------|
-| **Authentication & Session Management** | JWT implementation flaws, token lifecycle, session fixation |
-| **API Security** | Endpoint discovery, access control, mass assignment, IDOR |
-| **Infrastructure Reconnaissance** | Real IP discovery behind CDN/WAF, DNS analysis, certificate transparency |
-| **Frontend Security** | JavaScript static analysis, sensitive data exposure in client bundles |
-| **Cloud Misconfigurations** | Exposed databases, Docker registries, development environments |
+> 🤖 Tooling is developed with AI assistance (Google Gemini). The researcher directs all target selection, execution, analysis, and disclosure decisions.
 
 ---
 
-## 📂 Research
+## 📂 Case Studies
 
-### [Hosting Control Panel — Security Analysis](research/hosting-control-panel-security-analysis/)
+### 🔴 [Full Infrastructure Compromise via Multiple Vulnerabilities](zynhost-portal/)
+**Zynhost Portal — Cloud Hosting Provider**
 
-A comprehensive security assessment of a cloud hosting platform, discovering vulnerabilities across the authentication layer, API surface, and underlying infrastructure.
+A multi-layer misconfiguration chain discovered across authentication, API, and infrastructure layers of a cloud hosting platform. The vulnerability chain enables potential full infrastructure compromise through JWT bypass, exposed databases, and Docker misconfiguration.
 
 | Metric | Value |
 |--------|-------|
-| **Findings** | 18 total (4 High, 5 Medium, 9 Informational) |
-| **Tests Conducted** | 13 categories passed without vulnerability |
-| **Real IPs Discovered** | 3 (behind Cloudflare) |
-| **API Endpoints Mapped** | 100+ |
-| **Subdomains Identified** | 110+ |
-| **Duration** | 4 days |
-| **Status** | Report submitted to vendor |
+| Findings | 18 total (4 High · 5 Medium · 9 Info) |
+| Attack Chain | 8 stages → full infrastructure compromise |
+| Real IPs Behind CDN | 3 discovered |
+| API Endpoints Mapped | 100+ |
+| Subdomains Found | 110+ |
+| Duration | 5 hours active testing |
+| Status | Reported to vendor |
 
-**Key Findings:**
-- JWT tokens accepted after expiration — enabling persistent unauthorized access
-- Internal Docker registry URLs and startup commands exposed via public API
-- Database and SSH services exposed to the internet on staging server
-- Unsanitized HTML stored in user profile fields (Stored XSS)
+**Key Vulnerabilities:**
+- JWT tokens valid indefinitely (no expiration enforcement)
+- MariaDB 10.6 exposed to internet on staging
+- SSH with password auth exposed
+- Stored XSS in profile fields
+- Docker registry URLs and startup commands leaked
+- Complete API map in JavaScript bundle
 
-📄 [Full Report →](research/hosting-control-panel-security-analysis/report.md)
+📄 [Full Report →](zynhost-portal/report.md) · [Attack Chain →](zynhost-portal/attack-chain.md) · [Timeline →](zynhost-portal/timeline.md)
 
 ---
 
 ## 🧪 Methodology
 
-Research follows a structured approach based on the [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/) and [PTES](http://www.pentest-standard.org/):
+Research follows a structured approach based on [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/) and [PTES](http://www.pentest-standard.org/):
 
-```
-Reconnaissance → Surface Mapping → Vulnerability Testing → Impact Analysis → Reporting
-```
+| Phase | Focus |
+|-------|-------|
+| **Recon** | DNS, crt.sh, Shodan, SPF record analysis |
+| **Surface Mapping** | JavaScript static analysis, API endpoint extraction |
+| **Auth Testing** | JWT manipulation, session persistence, token lifecycle |
+| **Injection** | SQLi, XSS, command injection, path traversal |
+| **Infrastructure** | Real IP discovery, port scanning, service fingerprinting |
+| **Impact** | Exploit chaining, CVSS scoring, business risk |
 
-1. **Reconnaissance** — DNS enumeration, certificate transparency, Shodan/Censys, technology fingerprinting
-2. **Surface Mapping** — JavaScript analysis, API endpoint extraction, authentication flow analysis
-3. **Vulnerability Testing** — JWT attacks, injection testing, access control, business logic
-4. **Infrastructure Assessment** — Real IP discovery, port scanning, service fingerprinting
-5. **Impact Analysis** — Risk assessment, exploit chaining, severity classification
-6. **Reporting** — Structured documentation, responsible disclosure, remediation guidance
-
-📄 [Detailed Methodology →](methodology.md)
+📄 [Detailed Methodology →](zynhost-portal/methodology.md)
 
 ---
 
 ## 📜 Disclosure Policy
 
-This research follows **responsible disclosure** principles:
+- Vendors are contacted **before** any publication
+- Minimum **90-day** remediation window
+- Published reports are **sanitized** — no live exploits
+- Findings reported with **actionable remediation guidance**
 
-- Vendors are contacted **before** any public disclosure
-- A minimum **90-day** remediation window is provided
-- Critical findings are communicated with urgency
-- Published reports are **sanitized** to remove exploitable details
-- No proof-of-concept code targeting specific vendors is published
+📄 [Full Policy →](disclosure-policy.md)
 
-📄 [Full Disclosure Policy →](disclosure-policy.md)
+---
+
+## 🛠️ Tools
+
+Reusable security testing tools (AI-assisted development):
+
+| Tool | Purpose |
+|------|---------|
+| [`crawl_webapp.js`](tools/crawl_webapp.js) | Cloudflare bypass crawler + JS analysis |
+| [`test_api_basic.js`](tools/test_api_basic.js) | IDOR, privilege escalation, mass assignment |
+| [`test_api_advanced.js`](tools/test_api_advanced.js) | JWT attacks, SQLi, race conditions |
+| [`recon_infrastructure.js`](tools/recon_infrastructure.js) | Subdomain enum, DNS recon |
+| [`bruteforce_paths.js`](tools/bruteforce_paths.js) | Hidden path discovery |
+| [`test_real_ip.js`](tools/test_real_ip.js) | Direct IP testing (CDN bypass) |
 
 ---
 
@@ -100,40 +107,25 @@ This research follows **responsible disclosure** principles:
 ```
 security-research/
 │
-├── README.md                                        # This file
-├── methodology.md                                   # Research methodology
-├── disclosure-policy.md                             # Responsible disclosure policy
+├── README.md
+├── disclosure-policy.md
 │
-├── research/                                        # Published research
-│   └── hosting-control-panel-security-analysis/
-│       ├── report.md                                # Executive summary & findings
-│       ├── technical-analysis.md                    # Detailed technical analysis
-│       ├── impact.md                                # Impact assessment
-│       ├── remediation.md                           # Remediation recommendations
-│       └── timeline.md                              # Disclosure timeline
+├── zynhost-portal/                   # Case Study
+│   ├── report.md                     # Full vulnerability report
+│   ├── attack-chain.md               # Multi-stage attack visualization
+│   ├── timeline.md                   # Discovery timeline (story format)
+│   ├── methodology.md                # Case-specific methodology
+│   └── screenshots/
 │
-├── tools/                                           # Reusable security tools
-│   ├── crawl_webapp.js                              # Cloudflare bypass crawler
-│   ├── test_api_basic.js                            # API vulnerability tester
-│   ├── test_api_advanced.js                         # JWT, SQLi, XSS tester
-│   ├── recon_infrastructure.js                      # Infrastructure recon
-│   ├── bruteforce_paths.js                          # Path discovery
-│   ├── test_real_ip.js                              # Direct IP testing
-│   └── wordlist_paths.txt                           # Custom wordlist
-│
-└── assets/                                          # Media and resources
-    └── screenshots/
+└── tools/                            # Reusable security tools
+    ├── crawl_webapp.js
+    ├── test_api_basic.js
+    ├── test_api_advanced.js
+    ├── recon_infrastructure.js
+    ├── bruteforce_paths.js
+    ├── test_real_ip.js
+    └── wordlist_paths.txt
 ```
-
----
-
-## 🛡️ Ethics
-
-- All testing is performed with a **standard user account** — no privilege exploitation
-- Research targets are selected based on **public-facing services** only
-- Findings are reported to vendors with **actionable remediation guidance**
-- No automated scanning tools are used against production systems without consideration for impact
-- **AI-assisted tooling** is transparently credited throughout this repository
 
 ---
 
@@ -141,7 +133,6 @@ security-research/
 
 - **GitHub:** [@thanledinh](https://github.com/thanledinh)
 - **Email:** thanle.webdev@gmail.com
-- **Disclosure reports:** Sent directly to vendor security contacts
 
 ---
 
